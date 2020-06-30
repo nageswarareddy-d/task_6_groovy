@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: rs1
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      environment: test
+  template:
+    metadata:
+     name: php
+     labels:
+       environment: test
+    spec:
+      containers:
+        - name: php
+          image: vimal13/apache-webserver-php
+          tty: true
+          volumeMounts:
+            - name: php
+              mountPath:  /var/www/html
+      volumes:
+        - name: php 
+          persistentVolumeClaim: 
+            claimName: code-pv-claim

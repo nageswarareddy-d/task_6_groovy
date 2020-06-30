@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: rs1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      environment: test
+  template:
+    metadata:
+     name: html
+     labels:
+       environment: test
+    spec:
+      containers:
+        - name: html
+          image: nageswarareddy/apache:v1
+          tty: true
+          volumeMounts:
+            - name: html
+              mountPath:  /var/www/html
+      volumes:
+        - name: html
+          persistentVolumeClaim: 
+            claimName: code-pv-claim
