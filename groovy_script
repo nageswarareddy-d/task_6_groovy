@@ -1,0 +1,47 @@
+job("task6_job1") {
+  description("Fetch code from GitHub")  
+  
+  scm {
+    github("nageswarareddy-d/task_6_groovy", "master")  
+  }
+
+  triggers {
+    githubPush()
+  }
+}
+
+job("task6_job2") {
+  description("Creating Eenvironment") 
+  
+  triggers {
+    upstream("task6_job1")
+  }
+
+  steps {
+    shell(readFileFromWorkspace("launch_pod.sh"))
+  }
+}
+               
+job("task6_job3") {
+  description("Testing Application")
+  
+  triggers {
+    upstream("task6_job2")
+  }
+
+  steps {
+    shell(readFileFromWorkspace("test_code.sh"))
+  }
+}
+
+job("task6_job4") {
+  description("Build Test Status")
+  
+  triggers {
+    upstream("task6_job3")
+  }
+
+  steps {
+        shell(readFileFromWorkspace("send_email.sh"))
+  }
+}
